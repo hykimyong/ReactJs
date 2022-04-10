@@ -2,27 +2,41 @@
 <body>
 <div id="root"></div>
 </body>
-<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
         const root = document.getElementById('root');
 
         //state값이 바뀌면 코드가 리렌더링 된다 근데 리액트는 바뀌는 부분만 수정해서 다시그린다
         function App(){
-            const [counter, setCounter] = React.useState(0);
-            const onClick = () =>{
-                //setCounter(counter+1);            //state변경 방법1 직접바꾸기
-                //현재 state값을 바탕으로 다음 state를 계산하고싶을 사용
-                setCounter((current)=>current+1);   //state변경 방법2 함수로바꾸기
+            const [amount, setAmount] = React.useState(0);
+            const [flipped, setFlipped] = React.useState(false);
+            const onChange = (event) => {
+                setAmount(event.target.value);
             }
-            console.log("rendered");
-            console.log(counter);
+            const reset = () =>{
+                setAmount(0);
+            }
+
+            const onFlip = () => {
+                reset();
+                setFlipped((current) => !current);
+            }
+
             return (
                 <div>
-                    <h3>Total Clicks : {counter}</h3>
-                    <button onClick ={onClick}>Click me</button>
+                    <h1 className="hi">Super Converter</h1>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input value={flipped ? amount*60 : amount} id="minutes" placeholder="Minutes" type="number" onChange={onChange} disabled={flipped}/>
+                    <div>
+                        <label htmlFor="hours">Hours</label>
+                        <input value={flipped ? amount : Math.round(amount/60)} id="hours"  placeholder="Hours" type="number" onChange={onChange} disabled={!flipped}/>
+                    </div>
+                    <button onClick={reset}>Reset</button>
+                    <button onClick={onFlip}>Flip</button>
                 </div>
+
             );
         }
 
