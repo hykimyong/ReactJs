@@ -7,25 +7,30 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
 
-        function Btn({text, big}){
-        console.log(text,big);
-
-            return <button style={{
+        function Btn({text, onClick}){
+            console.log(text,"was rendered");
+            return <button onClick = {onClick} style={{
                 backgroundColor: "tomato",
                 color : "white",
                 padding : "10px 20px",
                 border : 0,
                 borderRadius : 10,
-                fontSize : big ? 18 : 16
+                fontSize : 16
             }}>{text}</button>;
         }
 
 
+        //state를 변경하면 아래 모든 컴포넌트들이 재사용되는데
+        //React.memo를 사용하면 props가 변경되지않으면 다시그려주지않는다.
+        const MemorizedBtn = React.memo(Btn);
+
         function App(){
+            const [value, setValue] = React.useState("Save Changes");
+            const changeValue = () => setValue("Revert Change");
             return (
                 <div>
-                    <Btn text="Save Changes" big={true}/>
-                    <Btn text="Continue" big={false}/>
+                    <MemorizedBtn text={value} onClick={changeValue}/>
+                    <MemorizedBtn text="Continue"/>
                 </div>
             );
         }
